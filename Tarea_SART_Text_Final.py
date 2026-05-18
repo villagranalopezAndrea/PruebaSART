@@ -24,9 +24,7 @@ seven_text = visual.TextStim(ventana, text="7", font="Arial", color="white", bol
 eight_text = visual.TextStim(ventana, text="8", font="Arial", color="white", bold=True, height=.45) # Go 8
 nine_text = visual.TextStim(ventana, text="9", font="Arial", color="white", bold=True, height=.45) # Go 9
 
-mas_text = visual.TextStim(ventana, text="+", font="Arial", color="white", height=.12)  # 
-x_img = visual.ImageStim(ventana, image="MascX.jpg")  # Máscaras entre números
-X_img = visual.ImageStim(ventana, image="MascXx.jpg") #
+mas_text = visual.TextStim(ventana, text="+", font="Arial", color="white", height=.12)  #Estímulo de máscara
 
 # Crear un diccionario para acceder a imgs por los números 1-9
 stimsNum = {
