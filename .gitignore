@@ -7,6 +7,10 @@ __pycache__/
 *.so
 
 venv-psychopy
+
+# Ignora todos los archivos de texto
+*.txt
+
 # Distribution / packaging
 .Python
 build/
