@@ -55,21 +55,27 @@ t_masc = 0.8 #800ms
 t_total_ensayo = t_num+t_masc #1100ms
 
 # Cálculo de número de ensayos 
-numsNo3 = [1, 2, 4, 5, 6, 7, 8, 9]
+numsNo3 = [1, 2, 4, 5, 6, 7, 8, 9] #Digitos del 1-9 excepto el 3
 sequence = []    #Lista para guardar la secuencia de números que se mostrarán en la prueba
-sequence_Fam = [] #Lista parte de familiarización
-
+sequence_Fam = [] #Lista fase de familiarización
 t_total_prueba = 360 #6 minutos * 60 segundos
-num_ensayos = round(t_total_prueba / t_total_ensayo) #327
-
+t_total_prueba_Fam = 77 #1.1 (tiempo ensayo) * 70 ensayos (60 a 80 ensayos)
 porcentaje_Num3 = .13 #13 porciento
-reps_num3 = round(num_ensayos * porcentaje_Num3) #Repeticiones num3 para ser el 13% de los ensayos = 43
-num_ensayos_restantes = num_ensayos - reps_num3  # 287 (1, 2, 4, 5, 6, 7, 8, 9)
 
-reps_numNo3 = round(num_ensayos_restantes / len(numsNo3)) #287 / 8 = 36
+def calculate_trials(t_total_prueba, t_total_ensayo, porcentaje_Num3, numsNo3, sequence):
+    num_ensayos = round(t_total_prueba / t_total_ensayo) #327
 
-vnum3 = [3]*reps_num3 #43 ensayos del #3
-sequence.extend(vnum3) #Agregar los 43 número
+    reps_num3 = round(num_ensayos * porcentaje_Num3) #Repeticiones num3 para ser el 13% de los ensayos = 43
+    num_ensayos_restantes = num_ensayos - reps_num3  # 287 (1, 2, 4, 5, 6, 7, 8, 9)
+
+    reps_numNo3 = round(num_ensayos_restantes / len(numsNo3)) #287 / 8 = 36
+
+    vnum3 = [3]*reps_num3 #43 ensayos del #3
+    sequence.extend(vnum3) #Agregar los 43 número
+    return reps_numNo3, reps_num3, sequence
+
+reps_numNo3, reps_num3, sequence = calculate_trials(t_total_prueba, t_total_ensayo, porcentaje_Num3, numsNo3, sequence)
+reps_numNo3_Fam, reps_num3_Fam, sequence_Fam = calculate_trials(t_total_prueba_Fam, t_total_ensayo, porcentaje_Num3, numsNo3, sequence_Fam)
 
 # Función para generar la secuencia de la prueba (324 ensayos) -> 6 minutos
 def generate_trial_sequence(numsNo3, reps_numNo3, sequence):
