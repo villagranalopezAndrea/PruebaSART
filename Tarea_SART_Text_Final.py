@@ -55,6 +55,10 @@ t_masc = 0.8 #800ms
 t_total_ensayo = t_num+t_masc #1100ms
 
 # Cálculo de número de ensayos 
+numsNo3 = [1, 2, 4, 5, 6, 7, 8, 9]
+sequence = []    #Lista para guardar la secuencia de números que se mostrarán en la prueba
+sequence_Fam = [] #Lista parte de familiarización
+
 t_total_prueba = 360 #6 minutos * 60 segundos
 num_ensayos = round(t_total_prueba / t_total_ensayo) #327
 
@@ -62,10 +66,8 @@ porcentaje_Num3 = .13 #13 porciento
 reps_num3 = round(num_ensayos * porcentaje_Num3) #Repeticiones num3 para ser el 13% de los ensayos = 43
 num_ensayos_restantes = num_ensayos - reps_num3  # 287 (1, 2, 4, 5, 6, 7, 8, 9)
 
-numsNo3 = [1, 2, 4, 5, 6, 7, 8, 9]
 reps_numNo3 = round(num_ensayos_restantes / len(numsNo3)) #287 / 8 = 36
 
-sequence = []
 vnum3 = [3]*reps_num3 #43 ensayos del #3
 sequence.extend(vnum3) #Agregar los 43 número
 
