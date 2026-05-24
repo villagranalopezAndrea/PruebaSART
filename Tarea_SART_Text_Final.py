@@ -133,7 +133,7 @@ total_trials = len(sequence)         #Num de Ensayos 331
 sequence_Fam = generate_trial_sequence(numsNo3, reps_numNo3_Fam, sequence_Fam) #Generar Lista de 73 números
 total_trials_Fam = len(sequence_Fam) #Num de Ensayos 73
 
-def run_trials(sequence, reps_num3, total_trials):
+def run_trials(sequence, reps_num3):
     responses = []       #1 si presionó, 0 si no
     reaction_times = []  #RT en seg
     good_Hits = []       #Aciertos (if num = 3, res=0) else res=1 (True/False)
@@ -214,25 +214,41 @@ def run_trials(sequence, reps_num3, total_trials):
             rt_str = f"{reaction_times[i]:.3f}" if reaction_times[i] is not None else "None"
             f.write(f"{i+1}\t{sequence[i]}\t{responses[i]}\t{rt_str}\t{int(good_Hits[i])}\n")
     
-    # Mostrar el resultado 
-    ventana.color = "white"
-    ventana.flip()          # actualiza el fondo 
+    # Mostrar el resultado   
     total_Hits = sum(good_Hits)
-    t_total_prueba_Real = (len(sequence)*t_total_ensayo)/60 #331*1.1 / 60seg = 
+    t_total_prueba_Real = (len(sequence)*t_total_ensayo)/60 #331*1.1 / 60seg = 6.07 minutos
     porcentaje_Real_Num3 = (reps_num3 / len(sequence))*100 #43/331*100 = 12.99%
-    final_text = visual.TextStim(ventana, text=f"Fin:)", color="black", height=0.1,)
-    subfinal_text = visual.TextStim(ventana, text=f"Aciertos: {total_Hits} de {total_trials}", color="black", height=0.05, pos=(0,0.6))
-    subfinal_text_2 = visual.TextStim(ventana, text=f"Porcentaje de veces visualización #3: {round(porcentaje_Real_Num3,2)}%\nTiempo Total Prueba: {round(t_total_prueba_Real,2)}mins", color="black", height=0.035, pos=(0,-0.5))
-    final_text.draw()
-    subfinal_text.draw()
-    subfinal_text_2.draw()
-    ventana.flip()
-    core.wait(5)
+    return total_Hits, porcentaje_Real_Num3, t_total_prueba_Real
 
-#Ejecutar la fase de familiarización
-run_trials(sequence_Fam, reps_num3_Fam, total_trials_Fam)
+#Ejecutar la fase de familiarización      (se desea saber porcentaje Real Num3?)
+t_total_prueba_Real = run_trials(sequence_Fam, reps_num3_Fam)[2] #Acceder al tiempo 3er elemnto fn
+t_Fam = round(t_total_prueba_Real,2)
+#Mostrar mensaje de transición a la prueba principal
+ventana.color = "white" 
+ventana.flip()          # actualiza el fondo
+trans_text = visual.TextStim(ventana, text=f"Fin de la prueba de familiarización", color="black", height=0.1,)
+trans_text2 = visual.TextStim(ventana, text="Presiona la tecla ENTER para iniciar la prueba principal", color="black", height=0.05, pos=(0, -0.6))
+trans_text.draw()
+trans_text2.draw()
+ventana.flip()    
+event.waitKeys(keyList=['return','escape']) #Pausa ejecución hasta que se presione alguna las teclas de KeyList
+if 'escape' in event.getKeys():
+    ventana.close()
+    core.quit()      
+
 # Ejecutar la prueba SART
-run_trials(sequence, reps_num3, total_trials)
-
-ventana.close()
-core.quit()
+total_Hits, porcentaje_Real_Num3, t_total_prueba_Real = run_trials(sequence, reps_num3)
+t_total_prueba_Real = round(t_total_prueba_Real,2)
+#Mostrar resultados prueba
+ventana.color = "white" 
+ventana.flip()          # actualiza el fondo
+final_text = visual.TextStim(ventana, text=f"Fin de la prueba :)", color="black", height=0.1,)
+final_text2 = visual.TextStim(ventana, text=f"Aciertos: {total_Hits} de {total_trials}", color="black", height=0.05, pos=(0,0.6))
+final_text3 = visual.TextStim(ventana, text=f"Porcentaje de visualización #3: {round(porcentaje_Real_Num3,2)}%\nTiempo Total Ensayos: {t_Fam} + {t_total_prueba_Real} = {t_Fam + t_total_prueba_Real}mins", color="black", height=0.05, pos=(0,-0.6))
+final_text.draw()
+final_text2.draw()
+final_text3.draw()
+ventana.flip()
+core.wait(5) # Mostrar resultados por 5 segundos
+ventana.close() #Cerrar ventana
+core.quit() #Cerrar programa
