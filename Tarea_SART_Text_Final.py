@@ -133,110 +133,116 @@ total_trials = len(sequence)         #Num de Ensayos 324
 sequence_Fam = generate_trial_sequence(numsNo3, reps_numNo3_Fam, sequence_Fam) #Generar Lista de 70 números
 total_trials_Fam = len(sequence_Fam) #Num de Ensayos 70
 
-score = 0            #Puntuación
-percentage_score = 0 #Regresa el porcentaje del total de aciertos
-responses = []       #1 si presionó, 0 si no
-reaction_times = []  #RT en seg
-good_Hits = []       #Aciertos (if num = 3, res=0) else res=1 (True/False)
+def run_trials(sequence, total_trials):
+    score = 0            #Puntuación
+    percentage_score = 0 #Regresa el porcentaje del total de aciertos
+    responses = []       #1 si presionó, 0 si no
+    reaction_times = []  #RT en seg
+    good_Hits = []       #Aciertos (if num = 3, res=0) else res=1 (True/False)
 
-# Definir el temporizador
-clock = core.Clock()
+    # Definir el temporizador
+    clock = core.Clock()
 
-# Comienza la prueba
-ventana.color = "gray"
-ventana.flip()          # actualiza el fondo 
-escapePushed = False #variable para salir del for
-for trial_number, number in enumerate(sequence): #regresa [#trial,dígito]
-    stimulus = stimsNum[number]
-    stimulus.draw()
+    # Comienza la prueba
+    ventana.color = "gray"
+    ventana.flip()          # actualiza el fondo 
+    escapePushed = False #variable para salir del for
+    for trial_number, number in enumerate(sequence): #regresa [#trial,dígito]
+        stimulus = stimsNum[number]
+        stimulus.draw()
+        ventana.flip()
+        clock.reset()   # Iniciar temporizador para el RT ( o hasta que responda)
+        
+        #Incializar valores de variables
+        response = 0  # No respuesta
+        rt = None  # Tiempo de reacción
+        
+        
+        # Esperar una respuesta durante el tiempo def para el dígito t_num(300ms)
+        #Con waitkeys por defecto, la 1er tecla termina la espera. Devuelve 0 o 1 tupla
+        while clock.getTime() < t_num:
+            keys = event.getKeys(keyList=["space", "escape"], timeStamped=clock)
+            if keys:
+                match keys[0][0]:
+                    case 'escape':
+                        escapePushed = True
+                        break
+                    case 'space':
+                        response = 1 # Presionó la tecla
+                        rt = keys[0][1]  # Se accede al 2ndo elemento de la tupla para
+                                    # Guardar el Tiempo de reacción [nombre de la tecla,rt]
+        if escapePushed:
+            break
+        
+        #Mostrar máscara
+        mas_text.draw()
+        ventana.flip()
+        
+        #Guardar tiempo justo cuando se muestra máscara
+        t_masc_Drew = clock.getTime()
+        t_masc_Fin = t_masc_Drew + t_masc #Desde que se dibuja + 800ms
+        
+        while clock.getTime() < t_masc_Fin:
+            keys2 = event.getKeys(keyList=["space", "escape"], timeStamped=clock)
+            if keys2:
+                match keys2[0][0]:
+                    case 'escape':
+                        escapePushed = True
+                        break
+                    case 'space':
+                        response = 1 # Presionó la tecla
+                        rt = keys2[0][1]  # Se accede al 2ndo elemento de la tupla para
+        if escapePushed:
+            break
+        
+        # Determinar las respuestas correctas
+        if number == 3: #Estímulo No-Go
+            correct = (response == 0)
+        else:           #Estímulos Go
+            correct = (response == 1)
+
+        # Actualizar la puntuación acumulada según los aciertos
+        if correct:
+            score += 10
+        else:
+            score = max(0, score - 10)
+        
+        # Almacenar las respuestas
+        good_Hits.append(correct)
+        responses.append(response)
+        reaction_times.append(rt)
+        
+    # Guardar los resultados en un archivo de texto
+
+    # Configurar el nombre del archivo de salida
+    output_file = f"datos/{participant}_resultados.txt"
+    with open(output_file, "w") as f:
+        f.write("Trial\tDígito\tKeyRes\tRT\tCorrecto(1=Sí)\n")  # Escribimos los encabezados
+
+        # Guardamos cada uno de los ensayos con las respuestas y tiempos de reacción
+        for i in range(len(good_Hits)):
+            rt_str = f"{reaction_times[i]:.3f}" if reaction_times[i] is not None else "None"
+            f.write(f"{i+1}\t{sequence[i]}\t{responses[i]}\t{rt_str}\t{int(good_Hits[i])}\n")
+    
+    # Mostrar el resultado 
+    ventana.color = "white"
+    ventana.flip()          # actualiza el fondo 
+    total_Hits = sum(good_Hits)
+    t_total_prueba_Real = (len(sequence)*t_total_ensayo)/60 #331*1.1 / 60seg = 
+    porcentaje_Real_Num3 = (reps_num3 / len(sequence))*100 #43/331*100 = 12.99%
+    final_text = visual.TextStim(ventana, text=f"Fin:)", color="black", height=0.1,)
+    subfinal_text = visual.TextStim(ventana, text=f"Puntos adquiridos: {score}\n\nAciertos: {total_Hits} de {total_trials}", color="black", height=0.05, pos=(0,0.6))
+    subfinal_text_2 = visual.TextStim(ventana, text=f"Porcentaje de veces visualización #3: {round(porcentaje_Real_Num3,2)}%\nTiempo Total Prueba: {round(t_total_prueba_Real,2)}mins", color="black", height=0.035, pos=(0,-0.5))
+    final_text.draw()
+    subfinal_text.draw()
+    subfinal_text_2.draw()
     ventana.flip()
-    clock.reset()   # Iniciar temporizador para el RT ( o hasta que responda)
-    
-    #Incializar valores de variables
-    response = 0  # No respuesta
-    rt = None  # Tiempo de reacción
-    
-    
-    # Esperar una respuesta durante el tiempo def para el dígito t_num(300ms)
-    #Con waitkeys por defecto, la 1er tecla termina la espera. Devuelve 0 o 1 tupla
-    while clock.getTime() < t_num:
-        keys = event.getKeys(keyList=["space", "escape"], timeStamped=clock)
-        if keys:
-            match keys[0][0]:
-                case 'escape':
-                    escapePushed = True
-                    break
-                case 'space':
-                    response = 1 # Presionó la tecla
-                    rt = keys[0][1]  # Se accede al 2ndo elemento de la tupla para
-                                 # Guardar el Tiempo de reacción [nombre de la tecla,rt]
-    if escapePushed:
-        break
-    
-    #Mostrar máscara
-    mas_text.draw()
-    ventana.flip()
-    
-    #Guardar tiempo justo cuando se muestra máscara
-    t_masc_Drew = clock.getTime()
-    t_masc_Fin = t_masc_Drew + t_masc #Desde que se dibuja + 800ms
-    
-    while clock.getTime() < t_masc_Fin:
-        keys2 = event.getKeys(keyList=["space", "escape"], timeStamped=clock)
-        if keys2:
-            match keys2[0][0]:
-                case 'escape':
-                    escapePushed = True
-                    break
-                case 'space':
-                    response = 1 # Presionó la tecla
-                    rt = keys2[0][1]  # Se accede al 2ndo elemento de la tupla para
-    if escapePushed:
-        break
-    
-    # Determinar las respuestas correctas
-    if number == 3: #Estímulo No-Go
-        correct = (response == 0)
-    else:           #Estímulos Go
-        correct = (response == 1)
+    core.wait(5)
 
-    # Actualizar la puntuación acumulada según los aciertos
-    if correct:
-        score += 10
-    else:
-        score = max(0, score - 10)
-    
-    # Almacenar las respuestas
-    good_Hits.append(correct)
-    responses.append(response)
-    reaction_times.append(rt)
-    
-# Guardar los resultados en un archivo de texto
-
-# Configurar el nombre del archivo de salida
-output_file = f"datos/{participant}_resultados.txt"
-with open(output_file, "w") as f:
-    f.write("Trial\tDígito\tKeyRes\tRT\tCorrecto(1=Sí)\n")  # Escribimos los encabezados
-
-    # Guardamos cada uno de los ensayos con las respuestas y tiempos de reacción
-    for i in range(len(good_Hits)):
-        rt_str = f"{reaction_times[i]:.3f}" if reaction_times[i] is not None else "None"
-        f.write(f"{i+1}\t{sequence[i]}\t{responses[i]}\t{rt_str}\t{int(good_Hits[i])}\n")
-
-# Mostrar el resultado final
-ventana.color = "white"
-ventana.flip()          # actualiza el fondo 
-total_Hits = sum(good_Hits)
-t_total_prueba_Real = (len(sequence)*t_total_ensayo)/60 #331*1.1 / 60seg = 
-porcentaje_Real_Num3 = (reps_num3 / len(sequence))*100 #43/331*100 = 12.99%
-final_text = visual.TextStim(ventana, text=f"Prueba finalizada:)", color="black", height=0.1,)
-subfinal_text = visual.TextStim(ventana, text=f"Puntos adquiridos: {score}\n\nAciertos: {total_Hits} de {total_trials}", color="black", height=0.05, pos=(0,0.6))
-subfinal_text_2 = visual.TextStim(ventana, text=f"Porcentaje de veces visualización #3: {round(porcentaje_Real_Num3,2)}%\nTiempo Total Prueba: {round(t_total_prueba_Real,2)}mins", color="black", height=0.035, pos=(0,-0.5))
-final_text.draw()
-subfinal_text.draw()
-subfinal_text_2.draw()
-ventana.flip()
-core.wait(5)
+#Ejecutar la fase de familiarización
+run_trials(sequence_Fam, total_trials_Fam)
+# Ejecutar la prueba SART
+run_trials(sequence, total_trials)
 
 ventana.close()
 core.quit()
