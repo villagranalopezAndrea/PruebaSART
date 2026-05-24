@@ -128,12 +128,12 @@ if 'escape' in event.getKeys():
     core.quit()
 
 # Variables de prueba puntuación y respuestas
-sequence = generate_trial_sequence(numsNo3, reps_numNo3, sequence) #Generar Lista de 324 números
-total_trials = len(sequence)         #Num de Ensayos 324
-sequence_Fam = generate_trial_sequence(numsNo3, reps_numNo3_Fam, sequence_Fam) #Generar Lista de 70 números
-total_trials_Fam = len(sequence_Fam) #Num de Ensayos 70
+sequence = generate_trial_sequence(numsNo3, reps_numNo3, sequence) #Generar Lista de 331 números
+total_trials = len(sequence)         #Num de Ensayos 331
+sequence_Fam = generate_trial_sequence(numsNo3, reps_numNo3_Fam, sequence_Fam) #Generar Lista de 73 números
+total_trials_Fam = len(sequence_Fam) #Num de Ensayos 73
 
-def run_trials(sequence, total_trials):
+def run_trials(sequence, reps_num3, total_trials):
     score = 0            #Puntuación
     percentage_score = 0 #Regresa el porcentaje del total de aciertos
     responses = []       #1 si presionó, 0 si no
@@ -240,9 +240,9 @@ def run_trials(sequence, total_trials):
     core.wait(5)
 
 #Ejecutar la fase de familiarización
-run_trials(sequence_Fam, total_trials_Fam)
+run_trials(sequence_Fam, reps_num3_Fam, total_trials_Fam)
 # Ejecutar la prueba SART
-run_trials(sequence, total_trials)
+run_trials(sequence, reps_num3, total_trials)
 
 ventana.close()
 core.quit()
