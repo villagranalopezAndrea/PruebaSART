@@ -128,8 +128,11 @@ if 'escape' in event.getKeys():
     core.quit()
 
 # Variables de prueba puntuación y respuestas
-sequence = generate_trial_sequence(numsNo3, reps_numNo3, sequence) #Generar Lista de 207 números
-total_trials = len(sequence)         #Num de Ensayos 207
+sequence = generate_trial_sequence(numsNo3, reps_numNo3, sequence) #Generar Lista de 324 números
+total_trials = len(sequence)         #Num de Ensayos 324
+sequence_Fam = generate_trial_sequence(numsNo3, reps_numNo3_Fam, sequence_Fam) #Generar Lista de 70 números
+total_trials_Fam = len(sequence_Fam) #Num de Ensayos 70
+
 score = 0            #Puntuación
 percentage_score = 0 #Regresa el porcentaje del total de aciertos
 responses = []       #1 si presionó, 0 si no
