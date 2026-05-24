@@ -134,8 +134,7 @@ sequence_Fam = generate_trial_sequence(numsNo3, reps_numNo3_Fam, sequence_Fam) #
 total_trials_Fam = len(sequence_Fam) #Num de Ensayos 73
 
 def run_trials(sequence, reps_num3, total_trials):
-    score = 0            #Puntuación
-    percentage_score = 0 #Regresa el porcentaje del total de aciertos
+    score = 0            #Puntuación acumulada
     responses = []       #1 si presionó, 0 si no
     reaction_times = []  #RT en seg
     good_Hits = []       #Aciertos (if num = 3, res=0) else res=1 (True/False)
