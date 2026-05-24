@@ -134,7 +134,6 @@ sequence_Fam = generate_trial_sequence(numsNo3, reps_numNo3_Fam, sequence_Fam) #
 total_trials_Fam = len(sequence_Fam) #Num de Ensayos 73
 
 def run_trials(sequence, reps_num3, total_trials):
-    score = 0            #Puntuación acumulada
     responses = []       #1 si presionó, 0 si no
     reaction_times = []  #RT en seg
     good_Hits = []       #Aciertos (if num = 3, res=0) else res=1 (True/False)
@@ -155,7 +154,6 @@ def run_trials(sequence, reps_num3, total_trials):
         #Incializar valores de variables
         response = 0  # No respuesta
         rt = None  # Tiempo de reacción
-        
         
         # Esperar una respuesta durante el tiempo def para el dígito t_num(300ms)
         #Con waitkeys por defecto, la 1er tecla termina la espera. Devuelve 0 o 1 tupla
@@ -199,12 +197,6 @@ def run_trials(sequence, reps_num3, total_trials):
             correct = (response == 0)
         else:           #Estímulos Go
             correct = (response == 1)
-
-        # Actualizar la puntuación acumulada según los aciertos
-        if correct:
-            score += 10
-        else:
-            score = max(0, score - 10)
         
         # Almacenar las respuestas
         good_Hits.append(correct)
@@ -212,7 +204,6 @@ def run_trials(sequence, reps_num3, total_trials):
         reaction_times.append(rt)
         
     # Guardar los resultados en un archivo de texto
-
     # Configurar el nombre del archivo de salida
     output_file = f"datos/{participant}_resultados.txt"
     with open(output_file, "w") as f:
@@ -230,7 +221,7 @@ def run_trials(sequence, reps_num3, total_trials):
     t_total_prueba_Real = (len(sequence)*t_total_ensayo)/60 #331*1.1 / 60seg = 
     porcentaje_Real_Num3 = (reps_num3 / len(sequence))*100 #43/331*100 = 12.99%
     final_text = visual.TextStim(ventana, text=f"Fin:)", color="black", height=0.1,)
-    subfinal_text = visual.TextStim(ventana, text=f"Puntos adquiridos: {score}\n\nAciertos: {total_Hits} de {total_trials}", color="black", height=0.05, pos=(0,0.6))
+    subfinal_text = visual.TextStim(ventana, text=f"Aciertos: {total_Hits} de {total_trials}", color="black", height=0.05, pos=(0,0.6))
     subfinal_text_2 = visual.TextStim(ventana, text=f"Porcentaje de veces visualización #3: {round(porcentaje_Real_Num3,2)}%\nTiempo Total Prueba: {round(t_total_prueba_Real,2)}mins", color="black", height=0.035, pos=(0,-0.5))
     final_text.draw()
     subfinal_text.draw()
