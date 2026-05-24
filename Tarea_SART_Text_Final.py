@@ -41,7 +41,8 @@ stimsNum = {
 
 #Cargar textos de instrucciones de la prueba
 instruction_text = visual.TextStim(ventana, text="Instrucciones", color="black", height=0.1, pos=(0, 0.6))#Altura[0-1] Posición [-1,1] [centro, arriba]
-instructions_text = visual.TextStim(ventana, text="Presiona la tecla de ESPACIO lo más rápido que puedas\n\nPara todos los números excepto el 3", color="black", height=0.05, pos=(0, 0.1))
+instruction_text2 = visual.TextStim(ventana, text="Presiona la tecla ESPACIO lo más rápido que puedas para todos los números excepto el 3", color="black", height=0.07, pos=(0, 0))
+instruction_text3 = visual.TextStim(ventana, text="Presiona la tecla ENTER para iniciar", color="black", height=0.05, pos=(0, -0.6))
 # Crear espacio de texto ID participante y cargar línea ________
 participant_text = visual.TextStim(ventana, text="Escribe tu inciales:", color="black", height=0.1, pos=(0, 0.2))
 participant_subtext = visual.TextStim(ventana, text="Presiona la tecla ENTER al finalizar", color="black", height=0.05, pos=(0, -0.6))
@@ -118,7 +119,8 @@ while participant == "":
 
 # Instrucciones iniciales
 instruction_text.draw()
-instructions_text.draw()          # Dibujar las instrucciones
+instruction_text2.draw()
+instruction_text3.draw()          # Dibujar las instrucciones
 ventana.flip()                    # Mostrar instrucciones anteriores
 event.waitKeys(keyList=['return','escape']) #Pausa ejecución hasta que se presione alguna las teclas de KeyList
 if 'escape' in event.getKeys():
