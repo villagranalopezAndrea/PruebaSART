@@ -74,6 +74,7 @@ def calculate_trials(t_total_prueba, t_total_ensayo, porcentaje_Num3, numsNo3, s
     sequence.extend(vnum3) #Agregar los 43 número
     return reps_numNo3, reps_num3, sequence
 
+# Usar la función para calcular el número de ensayos para la prueba y la fase de familiarización
 reps_numNo3, reps_num3, sequence = calculate_trials(t_total_prueba, t_total_ensayo, porcentaje_Num3, numsNo3, sequence)
 reps_numNo3_Fam, reps_num3_Fam, sequence_Fam = calculate_trials(t_total_prueba_Fam, t_total_ensayo, porcentaje_Num3, numsNo3, sequence_Fam)
 
