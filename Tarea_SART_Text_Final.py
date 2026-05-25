@@ -42,7 +42,7 @@ stimsNum = {
 #Cargar textos de instrucciones de la prueba
 instruction_text = visual.TextStim(ventana, text="Instrucciones", color="black", height=0.1, pos=(0, 0.6))#Altura[0-1] Posición [-1,1] [centro, arriba]
 instruction_text2 = visual.TextStim(ventana, text="Presiona la tecla ESPACIO lo más rápido que puedas para todos los números excepto el 3", color="black", height=0.07, pos=(0, 0))
-instruction_text3 = visual.TextStim(ventana, text="Presiona la tecla ENTER para iniciar", color="black", height=0.05, pos=(0, -0.6))
+instruction_text3 = visual.TextStim(ventana, text="Presiona la tecla ENTER para iniciar la prueba de familiarización", color="black", height=0.05, pos=(0, -0.6))
 # Crear espacio de texto ID participante y cargar línea ________
 participant_text = visual.TextStim(ventana, text="Escribe tu inciales:", color="black", height=0.1, pos=(0, 0.2))
 participant_subtext = visual.TextStim(ventana, text="Presiona la tecla ENTER al finalizar", color="black", height=0.05, pos=(0, -0.6))
@@ -249,6 +249,6 @@ final_text.draw()
 final_text2.draw()
 final_text3.draw()
 ventana.flip()
-core.wait(5) # Mostrar resultados por 5 segundos
+core.wait(10) # Mostrar resultados por 10C segundos
 ventana.close() #Cerrar ventana
 core.quit() #Cerrar programa
