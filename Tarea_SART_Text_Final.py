@@ -219,7 +219,7 @@ def run_trials(sequence, reps_num3):
     output_file = f"datos/{participant}_resultados.txt"
     #Revisar si el archivo ya existe para evitar sobreescribirlo
     existing_file = os.path.isfile(output_file)
-    with open(output_file, "a", encoding="utf-8") as f:
+    with open(output_file, "a", encoding="utf-8-sig") as f:
         if not existing_file:  #Sólo entonces escribir los encabezados
             f.write("Prueba de Familiarización\nTrial\tDígito\tKeyRes\tRT\tCorrecto(1=Sí)\n")  # Escribimos los encabezados
         else:
