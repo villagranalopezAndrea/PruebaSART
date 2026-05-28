@@ -106,7 +106,6 @@ def generate_trial_sequence(numsNo3, reps_numNo3, sequence):
     return sequence
 
 # Esperar a que el usuario ingrese su nombre
-start_t = time.time()  #Obtener hora de la computadora
 participant = ""
 while participant == "":
     participant_text.draw() #Mostrar la instrucción de ingresar ID
@@ -143,6 +142,9 @@ instruction_text2.draw()
 instruction_text3.draw()          # Dibujar las instrucciones
 ventana.flip()                    # Mostrar instrucciones anteriores
 wait_enter_scape()                # Esperar a que el usuario presione ENTER o ESCAPE para continuar
+
+start_t = time.time()  #Obtener hora de la computadora
+start_clock_hour = time.strftime("%H:%M:%S")#Mostrarlo en formato 24hrs/min/seg
 
 # Variables de prueba puntuación y respuestas
 sequence = generate_trial_sequence(numsNo3, reps_numNo3, sequence) #Generar Lista de 331 números
@@ -256,6 +258,11 @@ wait_enter_scape()
 
 # Ejecutar la prueba SART
 total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file = run_trials(sequence, reps_num3)
+
+final_t = time.time()  #Obtener hora de la computadora
+final_clock_hour = time.strftime("%H:%M:%S") #Cambiar formato
+tt_execution = (final_t - start_t) / 60 #Tiempo total en minutos
+
 t_total_prueba_Real = round(t_total_prueba_Real,2)
 #Mostrar resultados prueba
 ventana.color = "white" 
@@ -268,13 +275,11 @@ final_text2.draw()
 final_text3.draw()
 ventana.flip()
 
-final_t = time.time()  #Obtener hora de la computadora
-tt_execution = (final_t - start_t) / 60 #Tiempo total en minutos
-
 output_file = f"datos/{participant}_resultados.txt"
 with open(output_file, "a", encoding="utf-8-sig") as f:
     f.write(f"\nResumen\n")
     f.write(f"Porcentaje de visualización #3:  {round(porcentaje_Real_Num3_Fam,2)} y {round(porcentaje_Real_Num3,2)}%\n")
+    f.write(f"Hora de inicio y fin:  {start_clock_hour} ->  {final_clock_hour}\n")
     f.write(f"Tiempo total ensayos: {t_Fam} + {t_total_prueba_Real} = {t_Fam + t_total_prueba_Real}min\n")
     f.write(f"Tiempo total de la sesión: {round(tt_execution, 2)} min")
 
