@@ -3,6 +3,7 @@ from psychopy import visual, core, event, monitors  #Img,tempo,,,
 import random           #Módulo para poder generar secuencias de forma aleatoria
 import os               #Módulo del Sistema Operativo
 import pyautogui        #Obtener resolución del monitor en donde se correrá
+import time             #Para medir el tiempo total de la prueba (tomando en cuenta pausas)
 
 # Crear directorio para guardar respuestas 
 if not os.path.exists("datos"):
@@ -105,6 +106,7 @@ def generate_trial_sequence(numsNo3, reps_numNo3, sequence):
     return sequence
 
 # Esperar a que el usuario ingrese su nombre
+start_t = time.time()  #Obtener hora de la computadora
 participant = ""
 while participant == "":
     participant_text.draw() #Mostrar la instrucción de ingresar ID
@@ -237,10 +239,10 @@ def run_trials(sequence, reps_num3):
     total_Hits = sum(good_Hits)
     t_total_prueba_Real = (len(sequence)*t_total_ensayo)/60 #331*1.1 / 60seg = 6.07 minutos
     porcentaje_Real_Num3 = (reps_num3 / len(sequence))*100 #43/331*100 = 12.99%
-    return total_Hits, porcentaje_Real_Num3, t_total_prueba_Real
+    return total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file
 
-#Ejecutar la fase de familiarización      (se desea saber porcentaje Real Num3?)
-t_total_prueba_Real = run_trials(sequence_Fam, reps_num3_Fam)[2] #Acceder al tiempo 3er elemnto fn
+#Ejecutar la fase de familiarización      
+total_Hits_Fam, porcentaje_Real_Num3_Fam, t_total_prueba_Real, output_file_Fam = run_trials(sequence_Fam, reps_num3_Fam) #Regresar todos lo valores para desempaquetar el vector
 t_Fam = round(t_total_prueba_Real,2)
 #Mostrar mensaje de transición a la prueba principal
 ventana.color = "white" 
@@ -253,18 +255,29 @@ ventana.flip()
 wait_enter_scape()    
 
 # Ejecutar la prueba SART
-total_Hits, porcentaje_Real_Num3, t_total_prueba_Real = run_trials(sequence, reps_num3)
+total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file = run_trials(sequence, reps_num3)
 t_total_prueba_Real = round(t_total_prueba_Real,2)
 #Mostrar resultados prueba
 ventana.color = "white" 
 ventana.flip()          # actualiza el fondo
 final_text = visual.TextStim(ventana, text=f"Fin de la prueba :)", color="black", height=0.1,)
 final_text2 = visual.TextStim(ventana, text=f"Aciertos: {total_Hits} de {total_trials}", color="black", height=0.05, pos=(0,0.6))
-final_text3 = visual.TextStim(ventana, text=f"Porcentaje de visualización #3: {round(porcentaje_Real_Num3,2)}%\nTiempo Total Ensayos: {t_Fam} + {t_total_prueba_Real} = {t_Fam + t_total_prueba_Real}mins", color="black", height=0.05, pos=(0,-0.6))
+final_text3 = visual.TextStim(ventana, text=f"Presiona la tecla ENTER para terminar el experimento", color="black", height=0.05, pos=(0,-0.6))
 final_text.draw()
 final_text2.draw()
 final_text3.draw()
 ventana.flip()
+
+final_t = time.time()  #Obtener hora de la computadora
+tt_execution = (final_t - start_t) / 60 #Tiempo total en minutos
+
+output_file = f"datos/{participant}_resultados.txt"
+with open(output_file, "a", encoding="utf-8-sig") as f:
+    f.write(f"\nResumen\n")
+    f.write(f"Porcentaje de visualización #3:  {round(porcentaje_Real_Num3_Fam,2)} y {round(porcentaje_Real_Num3,2)}%\n")
+    f.write(f"Tiempo total ensayos: {t_Fam} + {t_total_prueba_Real} = {t_Fam + t_total_prueba_Real}min\n")
+    f.write(f"Tiempo total de la sesión: {round(tt_execution, 2)} min")
+
 wait_enter_scape()
 ventana.close() #Cerrar ventana
 core.quit() #Cerrar programa
