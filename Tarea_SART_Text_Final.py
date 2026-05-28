@@ -74,6 +74,13 @@ t_total_prueba = 360 #6 minutos * 60 segundos
 t_total_prueba_Fam = 77 #1.1 (tiempo ensayo) * 70 ensayos (60 a 80 ensayos)
 porcentaje_Num3 = .13 #13 porciento
 
+#Crear Fn para pausar la ejecución hasta que se presione la tecla ENTER o ESCAPE
+def wait_enter_scape():
+    event.waitKeys(keyList=['return','escape']) 
+    if 'escape' in event.getKeys():
+        ventana.close()
+        core.quit()
+
 def calculate_trials(t_total_prueba, t_total_ensayo, porcentaje_Num3, numsNo3, sequence):
     num_ensayos = round(t_total_prueba / t_total_ensayo) #327
 
@@ -133,10 +140,7 @@ instruction_text.draw()
 instruction_text2.draw()
 instruction_text3.draw()          # Dibujar las instrucciones
 ventana.flip()                    # Mostrar instrucciones anteriores
-event.waitKeys(keyList=['return','escape']) #Pausa ejecución hasta que se presione alguna las teclas de KeyList
-if 'escape' in event.getKeys():
-    ventana.close()
-    core.quit()
+wait_enter_scape()                # Esperar a que el usuario presione ENTER o ESCAPE para continuar
 
 # Variables de prueba puntuación y respuestas
 sequence = generate_trial_sequence(numsNo3, reps_numNo3, sequence) #Generar Lista de 331 números
@@ -246,10 +250,7 @@ trans_text2 = visual.TextStim(ventana, text="Presiona la tecla ENTER para inicia
 trans_text.draw()
 trans_text2.draw()
 ventana.flip()    
-event.waitKeys(keyList=['return','escape']) #Pausa ejecución hasta que se presione alguna las teclas de KeyList
-if 'escape' in event.getKeys():
-    ventana.close()
-    core.quit()      
+wait_enter_scape()    
 
 # Ejecutar la prueba SART
 total_Hits, porcentaje_Real_Num3, t_total_prueba_Real = run_trials(sequence, reps_num3)
@@ -264,6 +265,6 @@ final_text.draw()
 final_text2.draw()
 final_text3.draw()
 ventana.flip()
-core.wait(5) # Mostrar resultados por 10 segundos
+wait_enter_scape()
 ventana.close() #Cerrar ventana
 core.quit() #Cerrar programa
