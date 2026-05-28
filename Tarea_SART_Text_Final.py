@@ -14,7 +14,7 @@ screen_width, screen_height = pyautogui.size()
 # Crear y configurar monitor
 mon = monitors.Monitor('testMonitor')
 mon.setWidth(35)  # ancho del monitor en cm
-mon.setDistance(30)  # distancia de visualización en cm 
+mon.setDistance(30)  # distancia de visualización en cm
 mon.setSizePix([screen_width, screen_height])  # resolución de pantalla
 mon.save()  # Guardar la configuración del monitor
 
@@ -217,9 +217,13 @@ def run_trials(sequence, reps_num3):
     # Guardar los resultados en un archivo de texto
     # Configurar el nombre del archivo de salida
     output_file = f"datos/{participant}_resultados.txt"
-    with open(output_file, "w") as f:
-        f.write("Trial\tDígito\tKeyRes\tRT\tCorrecto(1=Sí)\n")  # Escribimos los encabezados
-
+    #Revisar si el archivo ya existe para evitar sobreescribirlo
+    existing_file = os.path.isfile(output_file)
+    with open(output_file, "a", encoding="utf-8") as f:
+        if not existing_file:  #Sólo entonces escribir los encabezados
+            f.write("Prueba de Familiarización\nTrial\tDígito\tKeyRes\tRT\tCorrecto(1=Sí)\n")  # Escribimos los encabezados
+        else:
+            f.write("\nPrueba principal\n")
         # Guardamos cada uno de los ensayos con las respuestas y tiempos de reacción
         for i in range(len(good_Hits)):
             rt_str = f"{reaction_times[i]:.3f}" if reaction_times[i] is not None else "None"
