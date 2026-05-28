@@ -1,14 +1,25 @@
 # Importamos las bibliotecas necesarias
-from psychopy import visual, core, event, data #Img,tempo,,,
+from psychopy import visual, core, event, monitors  #Img,tempo,,,
 import random           #Módulo para poder generar secuencias de forma aleatoria
 import os               #Módulo del Sistema Operativo
+import pyautogui        #Obtener resolución del monitor en donde se correrá
 
 # Crear directorio para guardar respuestas 
 if not os.path.exists("datos"):
     os.makedirs("datos")
 
-# Configurar resolución, color y tamaño de la ventana (que abarque toda la pantalla), 
-ventana = visual.Window([1920, 1200], color="white", fullscr=True)
+# Obtener la resolución en pixeles del monitor actual
+screen_width, screen_height = pyautogui.size()
+
+# Crear y configurar monitor
+mon = monitors.Monitor('testMonitor')
+mon.setWidth(35)  # ancho del monitor en cm
+mon.setDistance(30)  # distancia de visualización en cm 
+mon.setSizePix([screen_width, screen_height])  # resolución de pantalla
+mon.save()  # Guardar la configuración del monitor
+
+# Configurar resolución, color y tamaño de la ventana
+ventana = visual.Window([screen_width, screen_height], color="white", fullscr=True, monitor=mon)
 
 # Cargar imágenes de números + máscaras (TODAS tienen que estar en la misma carpeta que el .py
 # altura_estimulo_norm = 4.7 / (21.5625 / 2) = 0.436
@@ -249,6 +260,6 @@ final_text.draw()
 final_text2.draw()
 final_text3.draw()
 ventana.flip()
-core.wait(10) # Mostrar resultados por 10C segundos
+core.wait(5) # Mostrar resultados por 10 segundos
 ventana.close() #Cerrar ventana
 core.quit() #Cerrar programa
