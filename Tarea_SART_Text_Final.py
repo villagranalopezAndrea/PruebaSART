@@ -155,8 +155,9 @@ total_trials_Fam = len(sequence_Fam) #Num de Ensayos 73
 def run_trials(sequence, reps_num3):
     responses = []       #1 si presionó, 0 si no
     reaction_times = []  #RT en seg
-    good_Hits = []       #Aciertos (if num = 3, res=0) else res=1 (True/False)
-
+    good_Hits = []       #Aciertos (if num = 3, res=0) else res=1  ->  True(sí)(Acierto)
+    commission_errors = []  #Errores por comisión (contestar cuando es target)
+    omission_errors = []   #Errores por omisión (no contestar cuando es no es target)
     # Definir el temporizador
     clock = core.Clock()
 
@@ -212,13 +213,19 @@ def run_trials(sequence, reps_num3):
             break
         
         # Determinar las respuestas correctas
-        if number == 3: #Estímulo No-Go
+        if number == 3: #Estímulo No-Go (target)
             correct = (response == 0)
+            commission = (response == 1)
+            omission = False
         else:           #Estímulos Go
             correct = (response == 1)
+            omission = (response == 0)
+            commission = False
         
         # Almacenar las respuestas
         good_Hits.append(correct)
+        commission_errors.append(commission)
+        omission_errors.append(omission)
         responses.append(response)
         reaction_times.append(rt)
         
@@ -239,12 +246,14 @@ def run_trials(sequence, reps_num3):
     
     # Mostrar el resultado   
     total_Hits = sum(good_Hits)
+    total_commission = sum(commission_errors)
+    total_omission = sum(omission_errors)
     t_total_prueba_Real = (len(sequence)*t_total_ensayo)/60 #331*1.1 / 60seg = 6.07 minutos
     porcentaje_Real_Num3 = (reps_num3 / len(sequence))*100 #43/331*100 = 12.99%
-    return total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file
+    return total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file, total_commission, total_omission
 
 #Ejecutar la fase de familiarización      
-total_Hits_Fam, porcentaje_Real_Num3_Fam, t_total_prueba_Real, output_file_Fam = run_trials(sequence_Fam, reps_num3_Fam) #Regresar todos lo valores para desempaquetar el vector
+total_Hits_Fam, porcentaje_Real_Num3_Fam, t_total_prueba_Real, output_file_Fam, total_commission_Fam, total_omission_Fam = run_trials(sequence_Fam, reps_num3_Fam) #Regresar todos lo valores para desempaquetar el vector
 t_Fam = round(t_total_prueba_Real,2)
 #Mostrar mensaje de transición a la prueba principal
 ventana.color = "white" 
@@ -257,7 +266,7 @@ ventana.flip()
 wait_enter_scape()    
 
 # Ejecutar la prueba SART
-total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file = run_trials(sequence, reps_num3)
+total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file, total_commission, total_omission = run_trials(sequence, reps_num3)
 
 final_t = time.time()  #Obtener hora de la computadora
 final_clock_hour = time.strftime("%H:%M:%S") #Cambiar formato
@@ -278,10 +287,13 @@ ventana.flip()
 output_file = f"datos/{participant}_resultados.txt"
 with open(output_file, "a", encoding="utf-8-sig") as f:
     f.write(f"\nResumen\n")
-    f.write(f"Porcentaje de visualización #3:  {round(porcentaje_Real_Num3_Fam,2)} y {round(porcentaje_Real_Num3,2)}%\n")
+    f.write(f"Porcentaje de visualización #3:  {round(porcentaje_Real_Num3_Fam,2)} y {round(porcentaje_Real_Num3,2)}%\n\n")
     f.write(f"Hora de inicio y fin:  {start_clock_hour} ->  {final_clock_hour}\n")
     f.write(f"Tiempo total ensayos: {t_Fam} + {t_total_prueba_Real} = {t_Fam + t_total_prueba_Real}min\n")
-    f.write(f"Tiempo total de la sesión: {round(tt_execution, 2)} min")
+    f.write(f"Tiempo total de la sesión: {round(tt_execution, 2)} min\n\n")
+    f.write(f"Aciertos : {total_Hits_Fam}/{total_trials_Fam} y {total_Hits}/{total_trials}\n")
+    f.write(f"Errores por comisión: {total_commission_Fam} y {total_commission}\n")
+    f.write(f"Errores por omisión: {total_omission_Fam} y {total_omission}\n")
 
 wait_enter_scape()
 ventana.close() #Cerrar ventana
