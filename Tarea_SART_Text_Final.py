@@ -248,12 +248,14 @@ def run_trials(sequence, reps_num3):
     total_Hits = sum(good_Hits)
     total_commission = sum(commission_errors)
     total_omission = sum(omission_errors)
+    #Calcular el promedio de tiempos de reacción, asignando un valor de 0.8s para los ensayos sin respuesta (omisión) al igual que si termina la prueba (ESCAPE) antes de que salga algún ensayo
+    prom_rt = sum(rt if rt is not None else 0.8 for rt in reaction_times) / len(reaction_times) if reaction_times else 0.8
     t_total_prueba_Real = (len(sequence)*t_total_ensayo)/60 #331*1.1 / 60seg = 6.07 minutos
     porcentaje_Real_Num3 = (reps_num3 / len(sequence))*100 #43/331*100 = 12.99%
-    return total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file, total_commission, total_omission
+    return total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file, total_commission, total_omission, prom_rt
 
 #Ejecutar la fase de familiarización      
-total_Hits_Fam, porcentaje_Real_Num3_Fam, t_total_prueba_Real, output_file_Fam, total_commission_Fam, total_omission_Fam = run_trials(sequence_Fam, reps_num3_Fam) #Regresar todos lo valores para desempaquetar el vector
+total_Hits_Fam, porcentaje_Real_Num3_Fam, t_total_prueba_Real, output_file_Fam, total_commission_Fam, total_omission_Fam, prom_rt_Fam = run_trials(sequence_Fam, reps_num3_Fam) #Regresar todos lo valores para desempaquetar el vector
 t_Fam = round(t_total_prueba_Real,2)
 #Mostrar mensaje de transición a la prueba principal
 ventana.color = "white" 
@@ -266,7 +268,7 @@ ventana.flip()
 wait_enter_scape()    
 
 # Ejecutar la prueba SART
-total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file, total_commission, total_omission = run_trials(sequence, reps_num3)
+total_Hits, porcentaje_Real_Num3, t_total_prueba_Real, output_file, total_commission, total_omission, prom_rt = run_trials(sequence, reps_num3)
 
 final_t = time.time()  #Obtener hora de la computadora
 final_clock_hour = time.strftime("%H:%M:%S") #Cambiar formato
@@ -294,6 +296,7 @@ with open(output_file, "a", encoding="utf-8-sig") as f:
     f.write(f"Aciertos : {total_Hits_Fam}/{total_trials_Fam} y {total_Hits}/{total_trials}\n")
     f.write(f"Errores por comisión: {total_commission_Fam} y {total_commission}\n")
     f.write(f"Errores por omisión: {total_omission_Fam} y {total_omission}\n")
+    f.write(f"Promedio de tiempos de reacción: {round(prom_rt_Fam,3)}s y {round(prom_rt,3)}s\n")
 
 wait_enter_scape()
 ventana.close() #Cerrar ventana
